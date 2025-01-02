@@ -32,6 +32,20 @@ main {
     padding: 0 15px;
     position: relative;
 
+    .delta-select__value {
+        display: flex;
+        gap: 5px;
+
+        .delta-select__selected-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+        }
+    }
+
     .delta-select__list {
         display: flex;
         flex-direction: column;
