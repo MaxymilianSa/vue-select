@@ -59,4 +59,21 @@ describe('SelectComponent', () => {
     await wrapper.findAll('.delta-select__item')[1].trigger('click')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2'])
   })
+
+  it('updates multiple selected values', async () => {
+    const wrapper = mount(SelectComponent, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+          { value: '3', label: 'Option 3' },
+        ],
+        modelValue: ['1', '2'],
+        multiple: true,
+      },
+    })
+    await wrapper.find('.delta-select').trigger('click')
+    await wrapper.findAll('.delta-select__item')[2].trigger('click')
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([['1', '2', '3']])
+  })
 })
