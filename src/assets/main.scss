@@ -1,0 +1,67 @@
+body {
+    background-color: #f0f0f0;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+main {
+    margin: 0 auto;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.delta-select {
+    width: 396px;
+    height: 45px;
+    background-color: #ffffff;
+    border: 2px solid #e1e1e1;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    position: relative;
+
+    .delta-select__list {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        background-color: #ffffff;
+        border: 2px solid #e1e1e1;
+        top: 50px;
+        left: 0;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.06);
+        border-radius: 12px;
+        padding: 5px;
+        gap: 5px;
+
+        .delta-select__item {
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            display: flex;
+            background-color: transparent;
+            border: none;
+            cursor: default;
+            border-radius: 4px;
+            transition: ease-in-out 0.2s;
+
+            &:hover,
+            &.active {
+                background-color: #F2F4F3;
+                cursor: pointer;
+            }
+        }
+    }
+}
