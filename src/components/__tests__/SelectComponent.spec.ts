@@ -90,10 +90,10 @@ describe('SelectComponent', () => {
     })
 
     await wrapper.find('.delta-select__button').trigger('click')
-    await wrapper.findAll('.delta-select__item')[1].trigger('click')
+    await wrapper.findAll('.delta-select__item')[2].trigger('click')
     const options = wrapper.findAll('.delta-select__item')
-    expect(options.length).toBe(1)
-    expect(options[0].text()).toBe('Option 1')
+    expect(options.length).toBe(2)
+    expect(options[1].text()).toBe('Option 1')
   })
 
   it('does not allow selecting more than the maximum number of options', async () => {
@@ -117,5 +117,25 @@ describe('SelectComponent', () => {
 
     const selectedOptions = wrapper.findAll('.delta-select__selected-item')
     expect(selectedOptions.length).toBe(2)
+  })
+
+  it('allows selecting all options when "allOption" is true', async () => {
+    const wrapper = mount(SelectComponent, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+          { value: '3', label: 'Option 3' },
+        ],
+        modelValue: [],
+        multiple: true,
+        allOption: true,
+      },
+    })
+
+    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.choose-all').trigger('click')
+    const selectedOptions = wrapper.findAll('.delta-select__selected-item')
+    expect(selectedOptions.length).toBe(3)
   })
 })

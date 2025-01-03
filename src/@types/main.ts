@@ -2,6 +2,7 @@ export type SelectProps = {
   options: OptionType[]
   multiple?: boolean
   max?: number
+  allOption?: boolean
 }
 
 export type OptionType = {

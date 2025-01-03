@@ -12,8 +12,11 @@
             </div>
         </button>
         <div class="delta-select__list" v-if="isOpen">
+            <button v-if="multiple && allOption && !max" @click.stop="addAllOptionsToModel"
+                class="delta-select__item choose-all">Choose
+                all</button>
             <button v-for="option in optionsList" :key="option.value"
-                @click.stop="updateValue(option.value, option.disabled)" class="delta-select__item"
+                @click="updateValue(option.value, option.disabled)" class="delta-select__item"
                 :class="{ active: option.value === model || (model as OptionType['value'][]).includes(option.value), disabled: option.disabled || (max && multiple && (model as OptionType['value'][]).length >= max) }">{{
                     option.label }}</button>
         </div>
@@ -21,11 +24,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, withDefaults } from 'vue';
 
 import type { SelectProps, OptionType } from '@/@types/main';
 
-const props = defineProps<SelectProps>()
+const props = withDefaults(defineProps<SelectProps>(), {
+    allOption: true,
+})
 const model = defineModel()
 const isOpen = ref(false);
 
@@ -60,6 +65,14 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
     }
 
     model.value = value
+}
+
+const addAllOptionsToModel = () => {
+    if (!props.multiple || !props.allOption || props.max) {
+        return
+    }
+
+    model.value = props.options.filter(({ disabled }) => !disabled).map(option => option.value)
 }
 
 </script>
