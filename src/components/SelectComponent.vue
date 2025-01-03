@@ -9,9 +9,9 @@
             {{ selectedOption }}
         </div>
         <div class="delta-select__list" v-if="isOpen">
-            <button v-for="option in options" :key="option.value" @click.stop="updateValue(option.value)"
-                class="delta-select__item"
-                :class="{ active: option.value === model || (model as OptionType['value'][]).includes(option.value) }">{{
+            <button v-for="option in options" :key="option.value"
+                @click.stop="updateValue(option.value, option.disabled)" class="delta-select__item"
+                :class="{ active: option.value === model || (model as OptionType['value'][]).includes(option.value), disabled: option.disabled }">{{
                     option.label }}</button>
         </div>
     </button>
@@ -32,7 +32,11 @@ const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
 }
 
-const updateValue = (value: OptionType['value']) => {
+const updateValue = (value: OptionType['value'], disabled: OptionType['disabled']) => {
+
+    if (disabled) {
+        return
+    }
 
     if (props.multiple) {
         const values = [...model.value as OptionType['value'][]]

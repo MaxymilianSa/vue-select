@@ -6,4 +6,5 @@ export type SelectProps = {
 export type OptionType = {
   value: string
   label: string
+  disabled?: boolean
 }

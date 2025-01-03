@@ -76,4 +76,19 @@ describe('SelectComponent', () => {
     await wrapper.findAll('.delta-select__item')[2].trigger('click')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([['1', '2', '3']])
   })
+
+  it('disabled options cannot be selected', async () => {
+    const wrapper = mount(SelectComponent, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2', disabled: true },
+        ],
+        modelValue: '1',
+      },
+    })
+    await wrapper.find('.delta-select').trigger('click')
+    await wrapper.findAll('.delta-select__item')[1].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
 })

@@ -76,6 +76,11 @@ main {
                 background-color: #F2F4F3;
                 cursor: pointer;
             }
+
+            &.disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
         }
     }
 }
