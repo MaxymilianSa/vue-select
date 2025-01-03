@@ -14,7 +14,7 @@
         <div class="delta-select__list" v-if="isOpen">
             <button v-for="option in optionsList" :key="option.value"
                 @click.stop="updateValue(option.value, option.disabled)" class="delta-select__item"
-                :class="{ active: option.value === model || (model as OptionType['value'][]).includes(option.value), disabled: option.disabled }">{{
+                :class="{ active: option.value === model || (model as OptionType['value'][]).includes(option.value), disabled: option.disabled || (max && multiple && (model as OptionType['value'][]).length >= max) }">{{
                     option.label }}</button>
         </div>
     </div>
@@ -45,6 +45,11 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
     if (props.multiple) {
         const values = [...model.value as OptionType['value'][]]
         const index = values.indexOf(value)
+
+        if (props.max && (model.value as OptionType['value'][]).length >= props.max && index === -1) {
+            return
+        }
+
         if (index > -1) {
             values.splice(index, 1)
         } else {

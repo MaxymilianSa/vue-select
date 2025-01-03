@@ -95,4 +95,27 @@ describe('SelectComponent', () => {
     expect(options.length).toBe(1)
     expect(options[0].text()).toBe('Option 1')
   })
+
+  it('does not allow selecting more than the maximum number of options', async () => {
+    const wrapper = mount(SelectComponent, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+          { value: '3', label: 'Option 3' },
+        ],
+        modelValue: [],
+        multiple: true,
+        max: 2,
+      },
+    })
+
+    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.findAll('.delta-select__item')[0].trigger('click')
+    await wrapper.findAll('.delta-select__item')[0].trigger('click')
+    await wrapper.findAll('.delta-select__item')[0].trigger('click')
+
+    const selectedOptions = wrapper.findAll('.delta-select__selected-item')
+    expect(selectedOptions.length).toBe(2)
+  })
 })
