@@ -1,20 +1,23 @@
 <template>
-    <button class="delta-select" @click.capture="toggleDropdown">
-        <div class="delta-select__value" v-if="Array.isArray(selectedOption)">
-            <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value">
-                {{ option.label }}
-            </span>
-        </div>
-        <div class="delta-select__value" v-else>
-            {{ selectedOption }}
-        </div>
+    <div class="delta-select">
+        <button @click="toggleDropdown" class="delta-select__button">
+            <div class="delta-select__value" v-if="Array.isArray(selectedOption)">
+                <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value"
+                    @click.stop="updateValue(option.value, option.disabled)">
+                    {{ option.label }}
+                </span>
+            </div>
+            <div class="delta-select__value" v-else>
+                {{ selectedOption }}
+            </div>
+        </button>
         <div class="delta-select__list" v-if="isOpen">
-            <button v-for="option in options" :key="option.value"
+            <button v-for="option in optionsList" :key="option.value"
                 @click.stop="updateValue(option.value, option.disabled)" class="delta-select__item"
                 :class="{ active: option.value === model || (model as OptionType['value'][]).includes(option.value), disabled: option.disabled }">{{
                     option.label }}</button>
         </div>
-    </button>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -27,6 +30,7 @@ const model = defineModel()
 const isOpen = ref(false);
 
 const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => (model.value as OptionType['value'][]).includes(option.value)) : props.options.find(option => option.value === model.value)?.label || 'Select...')
+const optionsList = computed(() => props.multiple ? props.options.filter(option => !(model.value as OptionType['value'][]).includes(option.value)) : props.options)
 
 const toggleDropdown = () => {
     isOpen.value = !isOpen.value;

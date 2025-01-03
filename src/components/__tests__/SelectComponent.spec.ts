@@ -41,7 +41,7 @@ describe('SelectComponent', () => {
       },
     })
     expect(wrapper.find('.delta-select__list').exists()).toBe(false)
-    await wrapper.find('.delta-select').trigger('click')
+    await wrapper.find('.delta-select__button').trigger('click')
     expect(wrapper.find('.delta-select__list').exists()).toBe(true)
   })
 
@@ -55,7 +55,7 @@ describe('SelectComponent', () => {
         modelValue: '1',
       },
     })
-    await wrapper.find('.delta-select').trigger('click')
+    await wrapper.find('.delta-select__button').trigger('click')
     await wrapper.findAll('.delta-select__item')[1].trigger('click')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2'])
   })
@@ -72,23 +72,27 @@ describe('SelectComponent', () => {
         multiple: true,
       },
     })
-    await wrapper.find('.delta-select').trigger('click')
-    await wrapper.findAll('.delta-select__item')[2].trigger('click')
+    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.findAll('.delta-select__item')[0].trigger('click')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([['1', '2', '3']])
   })
 
-  it('disabled options cannot be selected', async () => {
+  it('removes selected option from the list', async () => {
     const wrapper = mount(SelectComponent, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
-          { value: '2', label: 'Option 2', disabled: true },
+          { value: '2', label: 'Option 2' },
         ],
-        modelValue: '1',
+        modelValue: [],
+        multiple: true,
       },
     })
-    await wrapper.find('.delta-select').trigger('click')
+
+    await wrapper.find('.delta-select__button').trigger('click')
     await wrapper.findAll('.delta-select__item')[1].trigger('click')
-    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    const options = wrapper.findAll('.delta-select__item')
+    expect(options.length).toBe(1)
+    expect(options[0].text()).toBe('Option 1')
   })
 })
