@@ -3,7 +3,7 @@ import './assets/main.scss'
 import { createApp } from 'vue'
 import App from './App.vue'
 
-import Select from './components/SelectComponent.vue'
+import Select from './components/Select.vue'
 
 const app = createApp(App)
 
