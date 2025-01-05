@@ -2,9 +2,11 @@
     <div class="delta-select">
         <button @click="toggleDropdown" class="delta-select__button">
             <div class="delta-select__value" v-if="Array.isArray(selectedOption)">
-                <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value"
-                    @click.stop="updateValue(option.value, option.disabled)">
+                <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value">
                     {{ option.label }}
+                    <button @click.stop="updateValue(option.value, option.disabled)">
+                        <CloseIcon :size="12" color="#111216" />
+                    </button>
                 </span>
             </div>
             <div class="delta-select__value" v-else>
@@ -22,6 +24,7 @@ import { ref, computed, withDefaults } from 'vue';
 import type { SelectProps, OptionType } from '@/@types/main';
 
 import List from './list/List.vue';
+import CloseIcon from './icons/CloseIcon.vue';
 
 const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,
