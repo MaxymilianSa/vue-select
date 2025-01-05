@@ -67,17 +67,20 @@ main {
         border-radius: 12px;
         padding: 5px;
         gap: 5px;
+        list-style: none;
 
         .delta-select__item {
             width: 100%;
             height: auto;
             padding: 10px;
             display: flex;
+            align-items: center;
             background-color: transparent;
             border: none;
             cursor: default;
             border-radius: 4px;
             transition: ease-in-out 0.2s;
+            gap: 10px;
 
             &:hover,
             &.active {
@@ -88,6 +91,48 @@ main {
             &.disabled {
                 cursor: not-allowed;
                 opacity: 0.5;
+            }
+
+            .delta-select__item-content {
+                display: flex;
+                align-items: center;
+                justify-content: start;
+                gap: 10px;
+
+                .delta-select__item-text {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                    justify-content: start;
+                    align-items: start;
+                    text-align: start;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #333333;
+
+                    span {
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: #999999;
+                    }
+                }
+
+                .delta-select__item-icon {
+                    width: 30px;
+                    min-width: 30px;
+                    height: 30px;
+                    border-radius: 100%;
+                    background-color: #e1e1e1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    img {
+                        width: 30px;
+                        height: 30px;
+                    }
+
+                }
             }
         }
     }

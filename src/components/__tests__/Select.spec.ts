@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 import { mount } from '@vue/test-utils'
-import SelectComponent from '@/components/SelectComponent.vue'
+import SelectComponent from '@/components/Select.vue'
 
 describe('SelectComponent', () => {
   it('renders properly', () => {
@@ -86,6 +86,7 @@ describe('SelectComponent', () => {
         ],
         modelValue: [],
         multiple: true,
+        hideSelected: true,
       },
     })
 
@@ -112,8 +113,8 @@ describe('SelectComponent', () => {
 
     await wrapper.find('.delta-select__button').trigger('click')
     await wrapper.findAll('.delta-select__item')[0].trigger('click')
-    await wrapper.findAll('.delta-select__item')[0].trigger('click')
-    await wrapper.findAll('.delta-select__item')[0].trigger('click')
+    await wrapper.findAll('.delta-select__item')[1].trigger('click')
+    await wrapper.findAll('.delta-select__item')[2].trigger('click')
 
     const selectedOptions = wrapper.findAll('.delta-select__selected-item')
     expect(selectedOptions.length).toBe(2)

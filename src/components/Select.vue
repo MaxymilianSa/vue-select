@@ -11,15 +11,8 @@
                 {{ selectedOption }}
             </div>
         </button>
-        <div class="delta-select__list" v-if="isOpen">
-            <button v-if="multiple && allOption && !max" @click.stop="addAllOptionsToModel"
-                class="delta-select__item choose-all">Choose
-                all</button>
-            <button v-for="option in optionsList" :key="option.value"
-                @click="updateValue(option.value, option.disabled)" class="delta-select__item"
-                :class="{ active: option.value === model || (model as OptionType['value'][]).includes(option.value), disabled: option.disabled || (max && multiple && (model as OptionType['value'][]).length >= max) }">{{
-                    option.label }}</button>
-        </div>
+        <List v-bind="{ ...props, options: optionsList, model }" v-if="isOpen" @add-all-options="addAllOptionsToModel"
+            @add-option="updateValue" />
     </div>
 </template>
 
@@ -28,14 +21,17 @@ import { ref, computed, withDefaults } from 'vue';
 
 import type { SelectProps, OptionType } from '@/@types/main';
 
+import List from './list/List.vue';
+
 const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,
+    hideSelected: false,
 })
 const model = defineModel()
 const isOpen = ref(false);
 
 const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => (model.value as OptionType['value'][]).includes(option.value)) : props.options.find(option => option.value === model.value)?.label || 'Select...')
-const optionsList = computed(() => props.multiple ? props.options.filter(option => !(model.value as OptionType['value'][]).includes(option.value)) : props.options)
+const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !(model.value as OptionType['value'][]).includes(option.value)) : props.options)
 
 const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
@@ -61,7 +57,8 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
             values.push(value)
         }
 
-        return model.value = values
+        model.value = values
+        return
     }
 
     model.value = value
