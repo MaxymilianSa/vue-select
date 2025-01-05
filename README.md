@@ -1,45 +1,37 @@
-# vue-select
+# Vue select 🐸
 
-This template should help get you started developing with Vue 3 in Vite.
+## Table of Contents
 
-## Recommended IDE Setup
+- [Technologies Used](#technologies-used)
+- [Naming Convention](#naming-convention)
+- [Directory Structure](#directory-structure)
+- [Install project](#install-project)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Technologies Used
 
-## Type Support for `.vue` Imports in TS
+- Node >= 16.0
+- Vue 3
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Naming Convention
 
-## Customize configuration
+We will use a **PascalCase**. Pascal case is a programming variable naming convention where the first letter of each compound word in a variable is capitalized.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Here are some examples of kebab case: `ComponentName.vue` and `OtherComponent.vue`.
 
-## Project Setup
+## Directory Structure
 
-```sh
-pnpm install
-```
+- `src/components` - all components
+- `src/assets` - all scss
+- `src/@types` - all types
 
-### Compile and Hot-Reload for Development
+## Prerequisites
 
-```sh
-pnpm dev
-```
+- [Install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Install Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Install yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
-### Type-Check, Compile and Minify for Production
+## Install project
 
-```sh
-pnpm build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-pnpm test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
+1. Clone repository
+2. Run `yarn` to install project dependencies.
+3. Run `yarn dev` to run dev server or `yarn build` for production purposes.
