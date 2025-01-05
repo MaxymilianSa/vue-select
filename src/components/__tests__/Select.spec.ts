@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 import { mount } from '@vue/test-utils'
-import SelectComponent from '@/components/SelectComponent.vue'
+import SelectComponent from '@/components/Select.vue'
 
 describe('SelectComponent', () => {
   it('renders properly', () => {
