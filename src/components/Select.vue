@@ -25,12 +25,13 @@ import List from './list/List.vue';
 
 const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,
+    hideSelected: false,
 })
 const model = defineModel()
 const isOpen = ref(false);
 
 const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => (model.value as OptionType['value'][]).includes(option.value)) : props.options.find(option => option.value === model.value)?.label || 'Select...')
-const optionsList = computed(() => props.multiple ? props.options.filter(option => !(model.value as OptionType['value'][]).includes(option.value)) : props.options)
+const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !(model.value as OptionType['value'][]).includes(option.value)) : props.options)
 
 const toggleDropdown = () => {
     isOpen.value = !isOpen.value;

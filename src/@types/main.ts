@@ -18,7 +18,11 @@ export type OptionType = {
   label: string
   description?: string
   disabled?: boolean
-  checked?: boolean
   preIcon?: string
   postIcon?: string
+}
+
+export type IconProps = {
+  color?: string
+  size?: number
 }
