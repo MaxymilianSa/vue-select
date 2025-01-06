@@ -1,13 +1,19 @@
 <template>
     <main>
-        <v-select v-model="value" v-bind="{ options }" multiple></v-select>
+        <v-select v-model="value" v-bind="{ options }" multiple>
+            <template #list="{ options, updateValue }">
+                <p v-for="option in options" :key="option.value"
+                    @click="() => updateValue(option.value, option.disabled)">{{ option.label }}
+                </p>
+            </template>
+        </v-select>
     </main>
 </template>
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
 
-import Memoji from '~/images/memoji.png'
+import Memoji from './assets/images/memoji.png'
 
 const value = ref('')
 

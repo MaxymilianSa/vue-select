@@ -13,13 +13,16 @@
                 {{ selectedOption }}
             </div>
         </button>
-        <List v-bind="{ ...props, options: optionsList, model }" v-if="isOpen" @add-all-options="addAllOptionsToModel"
-            @add-option="updateValue" />
+        <slot name="list" v-bind="{ ...props, options: optionsList, model, updateValue, addAllOptionsToModel }"
+            v-if="isOpen">
+            <List v-bind="{ ...props, options: optionsList, model }" @add-all-options="addAllOptionsToModel"
+                @add-option="updateValue" />
+        </slot>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, withDefaults } from 'vue';
+import { ref, computed } from 'vue';
 
 import type { SelectProps, OptionType } from '@/@types/main';
 
