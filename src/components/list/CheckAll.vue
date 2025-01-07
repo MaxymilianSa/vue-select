@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-defineEmits(['handleClick']);
-
+defineEmits<{
+    (e: 'handleClick'): void;
+}>();
 </script>

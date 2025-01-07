@@ -29,7 +29,9 @@ import CheckedIcon from '../icons/CheckedIcon.vue';
 import UncheckedIcon from '../icons/UncheckedIcon.vue';
 
 const { value, model, disabled, multiple, max } = defineProps<OptionProps>();
-defineEmits(['handleClick']);
+defineEmits<{
+    (e: 'handleClick'): void;
+}>();
 
 const isChecked = computed(() => value === model || (model as OptionType['value'][]).includes(value))
 const isDisabled = computed(() => disabled || (max && multiple && (model as OptionType['value'][]).length >= max));

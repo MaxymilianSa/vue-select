@@ -22,5 +22,8 @@ import CheckAll from './CheckAll.vue';
 import Item from './Item.vue';
 
 defineProps<ListProps>();
-defineEmits(['addOption', 'addAllOptions']);
+defineEmits<{
+    (e: 'addOption', value: string, disabled?: boolean): void;
+    (e: 'addAllOptions'): void;
+}>();
 </script>
