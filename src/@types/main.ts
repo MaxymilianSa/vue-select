@@ -14,7 +14,9 @@ export type ListProps = {
   modelModifiers: any
 }
 
-export type OptionProps = {} & OptionType &
+export type OptionProps = {
+  className?: string
+} & OptionType &
   Pick<ListProps, 'multiple' | 'max' | 'hideSelected' | 'allOption' | 'model'>
 
 export type OptionType = {
