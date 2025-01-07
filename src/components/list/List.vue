@@ -23,5 +23,4 @@ import Item from './Item.vue';
 
 defineProps<ListProps>();
 defineEmits(['addOption', 'addAllOptions']);
-
 </script>

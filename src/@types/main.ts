@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { VNode } from 'vue'
 
 export type SelectProps = {} & Omit<ListProps, 'model'>
+
+export type ValueType = string | OptionType['value'][]
 
 export type ListProps = {
   options: OptionType[]
@@ -9,9 +10,7 @@ export type ListProps = {
   max?: number
   allOption?: boolean
   hideSelected?: boolean
-  model: any
-  modelValue: any
-  modelModifiers: any
+  model?: ValueType
 }
 
 export type OptionProps = {

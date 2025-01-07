@@ -13,9 +13,11 @@
                 {{ selectedOption }}
             </div>
         </button>
-        <slot name="list" v-bind="{ ...props, options: optionsList, model, updateValue, addAllOptions }" v-if="isOpen">
-            <List v-bind="{ ...props, options: optionsList, model }" @add-all-options="addAllOptions"
-                @add-option="updateValue">
+        <slot name="list"
+            v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
+            v-if="isOpen">
+            <List v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model }"
+                @add-all-options="addAllOptions" @add-option="updateValue">
                 <template #header="props">
                     <slot name="header" v-bind="{ ...props, addAllOptions }"></slot>
                 </template>
@@ -33,7 +35,7 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 
-import type { SelectProps, OptionType } from '@/@types/main';
+import type { SelectProps, OptionType, ValueType } from '@/@types/main';
 
 import List from './list/List.vue';
 import CloseIcon from './icons/CloseIcon.vue';
@@ -42,11 +44,11 @@ const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,
     hideSelected: false,
 })
-const model = defineModel()
+const model = defineModel<ValueType>()
 const isOpen = ref(false);
 
-const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => (model.value as OptionType['value'][]).includes(option.value)) : props.options.find(option => option.value === model.value)?.label || 'Select...')
-const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !(model.value as OptionType['value'][]).includes(option.value)) : props.options)
+const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || 'Select...')
+const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !model.value?.includes(option.value)) : props.options)
 
 const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
@@ -59,10 +61,10 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
     }
 
     if (props.multiple) {
-        const values = [...model.value as OptionType['value'][]]
+        const values = model.value ? [...model.value] : []
         const index = values.indexOf(value)
 
-        if (props.max && (model.value as OptionType['value'][]).length >= props.max && index === -1) {
+        if (props.max && values.length >= props.max && index === -1) {
             return
         }
 
