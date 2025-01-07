@@ -1,10 +1,8 @@
 <template>
     <main>
-        <v-select v-model="value" v-bind="{ options }" multiple>
-            <template #list="{ options, updateValue }">
-                <p v-for="option in options" :key="option.value"
-                    @click="() => updateValue(option.value, option.disabled)">{{ option.label }}
-                </p>
+        <v-select v-model="value" v-bind="{ options, hideSelected: true }" multiple>
+            <template #option="{ label, value, disabled, updateValue }">
+                <p @click="updateValue(value, disabled)">{{ label }}</p>
             </template>
         </v-select>
     </main>

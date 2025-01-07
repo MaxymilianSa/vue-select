@@ -16,7 +16,11 @@
         <slot name="list" v-bind="{ ...props, options: optionsList, model, updateValue, addAllOptionsToModel }"
             v-if="isOpen">
             <List v-bind="{ ...props, options: optionsList, model }" @add-all-options="addAllOptionsToModel"
-                @add-option="updateValue" />
+                @add-option="updateValue">
+                <template #option="props">
+                    <slot name="option" v-bind="{ ...props, updateValue }"></slot>
+                </template>
+            </List>
         </slot>
     </div>
 </template>

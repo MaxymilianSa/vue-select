@@ -4,8 +4,12 @@
             <li v-if="multiple && allOption && !max">
                 <button @click="$emit('addAllOptions')" class="delta-select__item choose-all">Choose all</button>
             </li>
-            <Item v-for="option in options" :key="option.value" v-bind="{ ...$props, ...option }"
-                @add-option="$emit('addOption', option.value, option.disabled)" />
+            <li v-for="option in options" :key="option.value">
+                <slot name="option" v-bind="{ ...$props, ...option }">
+                    <Item v-bind="{ ...$props, ...option }"
+                        @add-option="$emit('addOption', option.value, option.disabled)" />
+                </slot>
+            </li>
         </ul>
     </slot>
 </template>

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { VNode } from 'vue'
+
 export type SelectProps = {} & Omit<ListProps, 'model'>
 
 export type ListProps = {
@@ -6,8 +9,9 @@ export type ListProps = {
   max?: number
   allOption?: boolean
   hideSelected?: boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   model: any
+  modelValue: any
+  modelModifiers: any
 }
 
 export type OptionProps = {} & OptionType &
@@ -18,8 +22,8 @@ export type OptionType = {
   label: string
   description?: string
   disabled?: boolean
-  preIcon?: string
-  postIcon?: string
+  preIcon?: VNode
+  postIcon?: VNode
 }
 
 export type IconProps = {
