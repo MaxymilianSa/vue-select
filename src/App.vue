@@ -1,12 +1,11 @@
 <template>
     <main>
-        <v-select v-model="value" v-bind="{ options }" multiple>
-            <template #list="{ options, updateValue }">
-                <p v-for="option in options" :key="option.value"
-                    @click="() => updateValue(option.value, option.disabled)">{{ option.label }}
-                </p>
+        <v-select v-model="value" v-bind="{ options, hideSelected: true }" multiple>
+            <template #header="{ addAllOptions }">
+                <button @click="addAllOptions">Add all users</button>
             </template>
         </v-select>
+        <button @click="() => value = ['john-doe']">Add random user</button>
     </main>
 </template>
 
@@ -15,7 +14,7 @@ import { ref, h } from 'vue'
 
 import Memoji from './assets/images/memoji.png'
 
-const value = ref('')
+const value = ref<string | string[]>('')
 
 const options = [
     {
