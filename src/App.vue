@@ -1,11 +1,6 @@
 <template>
     <main>
-        <v-select v-model="value" v-bind="{ options, hideSelected: true }" multiple>
-            <template #header="{ addAllOptions }">
-                <button @click="addAllOptions">Add all users</button>
-            </template>
-        </v-select>
-        <button @click="() => value = ['john-doe']">Add random user</button>
+        <v-select v-model="value" v-bind="{ options, hideSelected: true }" multiple />
     </main>
 </template>
 
