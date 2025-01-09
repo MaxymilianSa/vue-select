@@ -1,5 +1,5 @@
 <template>
-    <div class="delta-select">
+    <div class="delta-select" ref="dropdownRef">
         <button @click="toggleDropdown" class="delta-select__button">
             <div class="delta-select__value" v-if="Array.isArray(selectedOption)">
                 <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value">
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onBeforeMount } from 'vue';
 
 import type { SelectProps, OptionType, ValueType } from '@/@types/main';
 
@@ -46,6 +46,7 @@ const props = withDefaults(defineProps<SelectProps>(), {
 })
 const model = defineModel<ValueType>()
 const isOpen = ref(false);
+const dropdownRef = ref<HTMLElement | null>(null);
 
 const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || 'Select...')
 const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !model.value?.includes(option.value)) : props.options)
@@ -89,4 +90,17 @@ const addAllOptions = () => {
     model.value = props.options.filter(({ disabled }) => !disabled).map(option => option.value)
 }
 
+const handleClickOutside = (event: PointerEvent) => {
+    if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+        isOpen.value = false;
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('pointerdown', handleClickOutside)
+})
+
+onBeforeMount(() => {
+    document.removeEventListener('pointerdown', handleClickOutside)
+})
 </script>
