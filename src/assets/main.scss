@@ -24,6 +24,15 @@ main {
     position: relative;
     box-sizing: border-box;
 
+    &.delta-select--disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+
+        .delta-select__button {
+            cursor: not-allowed;
+        }
+    }
+
     * {
         box-sizing: border-box;
     }

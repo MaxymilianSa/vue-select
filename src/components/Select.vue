@@ -1,5 +1,6 @@
 <template>
-    <div class="delta-select" ref="dropdownRef">
+    <div class="delta-select" ref="dropdownRef"
+        :class="{ 'delta-select--disabled': disabled, 'delta-select--is-open': isOpen && !disabled }">
         <button @click="toggleDropdown" class="delta-select__button">
             <div class="delta-select__value" v-if="Array.isArray(selectedOption)">
                 <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value">
@@ -15,7 +16,7 @@
         </button>
         <slot name="list"
             v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
-            v-if="isOpen">
+            v-if="isOpen && !disabled">
             <List v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model }"
                 @add-all-options="addAllOptions" @add-option="updateValue">
                 <template #header="props">
@@ -52,6 +53,11 @@ const selectedOption = computed<string | OptionType[]>(() => props.multiple ? pr
 const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !model.value?.includes(option.value)) : props.options)
 
 const toggleDropdown = () => {
+
+    if (props.disabled) {
+        return
+    }
+
     isOpen.value = !isOpen.value;
 }
 
@@ -90,17 +96,17 @@ const addAllOptions = () => {
     model.value = props.options.filter(({ disabled }) => !disabled).map(option => option.value)
 }
 
-const handleClickOutside = (event: PointerEvent) => {
+const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
         isOpen.value = false;
     }
 }
 
 onMounted(() => {
-    document.addEventListener('pointerdown', handleClickOutside)
+    document.addEventListener('click', handleClickOutside)
 })
 
 onBeforeMount(() => {
-    document.removeEventListener('pointerdown', handleClickOutside)
+    document.removeEventListener('click', handleClickOutside)
 })
 </script>
