@@ -62,8 +62,9 @@ const model = defineModel<ValueType>()
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
-const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || 'Select...')
+const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || '')
 const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !model.value?.includes(option.value)) : props.options)
+const closeOnSelect = computed(() => props.closeOnSelect || !props.multiple)
 
 const toggleDropdown = () => {
 
@@ -75,7 +76,6 @@ const toggleDropdown = () => {
 }
 
 const updateValue = (value: OptionType['value'], disabled: OptionType['disabled']) => {
-
     if (disabled) {
         return
     }
@@ -95,10 +95,19 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
         }
 
         model.value = values
+
+        if (closeOnSelect.value) {
+            isOpen.value = false
+        }
+
         return
     }
 
     model.value = value
+
+    if (closeOnSelect.value) {
+        isOpen.value = false
+    }
 }
 
 const addAllOptions = () => {
@@ -107,6 +116,10 @@ const addAllOptions = () => {
     }
 
     model.value = props.options.filter(({ disabled }) => !disabled).map(option => option.value)
+
+    if (closeOnSelect.value) {
+        isOpen.value = false
+    }
 }
 
 const clearValue = () => {
