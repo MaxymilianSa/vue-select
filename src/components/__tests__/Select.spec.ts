@@ -185,4 +185,19 @@ describe('Select', () => {
     await wrapper.find('.delta-select__clear').trigger('click')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([''])
   })
+
+  it('close the dropdown when clicking option', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [{ value: '1', label: 'Option 1' }],
+        modelValue: '',
+      },
+    })
+
+    await wrapper.find('.delta-select__button').trigger('click')
+    expect(wrapper.find('.delta-select').classes()).toContain('delta-select--is-open')
+
+    await wrapper.find('.delta-select__item').trigger('click')
+    expect(wrapper.find('.delta-select').classes()).not.toContain('delta-select--is-open')
+  })
 })
