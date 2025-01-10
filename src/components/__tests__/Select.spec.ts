@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
 
 import { mount } from '@vue/test-utils'
-import SelectComponent from '@/components/Select.vue'
+import Select from '@/components/Select.vue'
 
-describe('SelectComponent', () => {
+describe('Select', () => {
   it('renders properly', () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -18,7 +18,7 @@ describe('SelectComponent', () => {
   })
 
   it('displays the selected option', () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -31,7 +31,7 @@ describe('SelectComponent', () => {
   })
 
   it('toggles the dropdown', async () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -45,8 +45,23 @@ describe('SelectComponent', () => {
     expect(wrapper.find('.delta-select__list').exists()).toBe(true)
   })
 
+  it('not display the dropdown when disabled', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+        ],
+        modelValue: '1',
+        disabled: true,
+      },
+    })
+    await wrapper.find('.delta-select__button').trigger('click')
+    expect(wrapper.find('.delta-select__list').exists()).toBe(false)
+  })
+
   it('updates the selected value', async () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -61,7 +76,7 @@ describe('SelectComponent', () => {
   })
 
   it('updates multiple selected values', async () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -78,7 +93,7 @@ describe('SelectComponent', () => {
   })
 
   it('removes selected option from the list', async () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -98,7 +113,7 @@ describe('SelectComponent', () => {
   })
 
   it('does not allow selecting more than the maximum number of options', async () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -121,7 +136,7 @@ describe('SelectComponent', () => {
   })
 
   it('allows selecting all options when "allOption" is true', async () => {
-    const wrapper = mount(SelectComponent, {
+    const wrapper = mount(Select, {
       props: {
         options: [
           { value: '1', label: 'Option 1' },
@@ -138,5 +153,51 @@ describe('SelectComponent', () => {
     await wrapper.find('.choose-all').trigger('click')
     const selectedOptions = wrapper.findAll('.delta-select__selected-item')
     expect(selectedOptions.length).toBe(3)
+  })
+
+  it('closes dropdown when clicking outside', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [{ value: '1', label: 'Option 1' }],
+        modelValue: '',
+      },
+    })
+
+    await wrapper.find('.delta-select__button').trigger('click')
+    expect(wrapper.find('.delta-select').classes()).toContain('delta-select--is-open')
+
+    await document.body.click()
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('.delta-select').classes()).not.toContain('delta-select--is-open')
+  })
+
+  it('clears the selected value when clearable is true', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [{ value: '1', label: 'Option 1' }],
+        modelValue: '1',
+        clearable: true,
+      },
+    })
+
+    expect(wrapper.find('.delta-select__clear').exists()).toBe(true)
+    await wrapper.find('.delta-select__clear').trigger('click')
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([''])
+  })
+
+  it('close the dropdown when clicking option', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [{ value: '1', label: 'Option 1' }],
+        modelValue: '',
+      },
+    })
+
+    await wrapper.find('.delta-select__button').trigger('click')
+    expect(wrapper.find('.delta-select').classes()).toContain('delta-select--is-open')
+
+    await wrapper.find('.delta-select__item').trigger('click')
+    expect(wrapper.find('.delta-select').classes()).not.toContain('delta-select--is-open')
   })
 })

@@ -24,6 +24,15 @@ main {
     position: relative;
     box-sizing: border-box;
 
+    &.delta-select--disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+
+        .delta-select__button {
+            cursor: not-allowed;
+        }
+    }
+
     * {
         box-sizing: border-box;
     }
@@ -69,6 +78,23 @@ main {
                     opacity: 1;
                 }
             }
+        }
+    }
+
+    .delta-select__icons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+
+        button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
     }
 

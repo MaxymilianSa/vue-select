@@ -1,6 +1,10 @@
 import type { VNode } from 'vue'
 
-export type SelectProps = {} & Omit<ListProps, 'model'>
+export type SelectProps = {
+  disabled?: boolean
+  clearable?: boolean
+  closeOnSelect?: boolean
+} & Omit<ListProps, 'model'>
 
 export type ValueType = string | OptionType['value'][]
 
