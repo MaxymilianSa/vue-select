@@ -171,4 +171,18 @@ describe('Select', () => {
 
     expect(wrapper.find('.delta-select').classes()).not.toContain('delta-select--is-open')
   })
+
+  it('clears the selected value when clearable is true', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [{ value: '1', label: 'Option 1' }],
+        modelValue: '1',
+        clearable: true,
+      },
+    })
+
+    expect(wrapper.find('.delta-select__clear').exists()).toBe(true)
+    await wrapper.find('.delta-select__clear').trigger('click')
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([''])
+  })
 })

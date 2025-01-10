@@ -14,6 +14,12 @@
                 {{ selectedOption }}
             </div>
             <div class="delta-select__icons">
+                <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue }">
+                    <button @click.stop="clearValue" v-if="!disabled && clearable && selectedOption.length"
+                        class="delta-select__clear">
+                        <CloseIcon :size="12" color="#111216" />
+                    </button>
+                </slot>
                 <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown }">
                     <ExpandVerticalIcon :size="18" color="#111216" />
                 </slot>
@@ -50,6 +56,7 @@ import ExpandVerticalIcon from './icons/ExpandVerticalIcon.vue';
 const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,
     hideSelected: false,
+    clearable: true,
 })
 const model = defineModel<ValueType>()
 const isOpen = ref(false);
@@ -100,6 +107,10 @@ const addAllOptions = () => {
     }
 
     model.value = props.options.filter(({ disabled }) => !disabled).map(option => option.value)
+}
+
+const clearValue = () => {
+    model.value = props.multiple ? [] : ''
 }
 
 const handleClickOutside = (event: MouseEvent) => {
