@@ -13,6 +13,11 @@
             <div class="delta-select__value" v-else>
                 {{ selectedOption }}
             </div>
+            <div class="delta-select__icons">
+                <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown }">
+                    <ExpandVerticalIcon :size="18" color="#111216" />
+                </slot>
+            </div>
         </button>
         <slot name="list"
             v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
@@ -40,6 +45,7 @@ import type { SelectProps, OptionType, ValueType } from '@/@types/main';
 
 import List from './list/List.vue';
 import CloseIcon from './icons/CloseIcon.vue';
+import ExpandVerticalIcon from './icons/ExpandVerticalIcon.vue';
 
 const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,

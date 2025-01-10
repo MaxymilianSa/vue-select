@@ -1,6 +1,10 @@
 <template>
     <main>
-        <v-select v-model="value" v-bind="{ options, disabled: true }" multiple />
+        <v-select v-model="value" v-bind="{ options }" multiple>
+            <template #toggle-icon>
+                <p>open</p>
+            </template>
+        </v-select>
     </main>
 </template>
 

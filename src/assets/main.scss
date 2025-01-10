@@ -81,6 +81,13 @@ main {
         }
     }
 
+    .delta-select__icons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
     .delta-select__list {
         display: flex;
         flex-direction: column;
