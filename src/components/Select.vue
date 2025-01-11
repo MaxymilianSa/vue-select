@@ -1,7 +1,8 @@
 <template>
     <div class="delta-select" ref="dropdownRef"
         :class="{ 'delta-select--disabled': disabled, 'delta-select--is-open': isOpen && !disabled }">
-        <button @click="toggleDropdown" class="delta-select__button">
+        <div class="delta-select__button">
+            <button class="delta-select__button-bg" @click="toggleDropdown"></button>
             <div class="delta-select__value" v-if="Array.isArray(selectedOption)">
                 <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value">
                     {{ option.label }}
@@ -11,7 +12,8 @@
                 </span>
             </div>
             <div class="delta-select__value" v-else>
-                {{ selectedOption }}
+                <input type="text" ref="searchEl" v-model="search" placeholder="Select ..."
+                    @focus="() => isOpen = true" />
             </div>
             <div class="delta-select__icons">
                 <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue }">
@@ -21,10 +23,10 @@
                     </button>
                 </slot>
                 <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown }">
-                    <ExpandVerticalIcon :size="18" color="#111216" />
+                    <ExpandVerticalIcon :size="18" color="#111216" @click="toggleDropdown" />
                 </slot>
             </div>
-        </button>
+        </div>
         <slot name="list"
             v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
             v-if="isOpen && !disabled">
@@ -59,11 +61,21 @@ const props = withDefaults(defineProps<SelectProps>(), {
     clearable: true,
 })
 const model = defineModel<ValueType>()
+const search = ref('')
+const searchEl = ref<HTMLInputElement | null>(null)
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
 const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || '')
-const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !model.value?.includes(option.value)) : props.options)
+const optionsList = computed(() => {
+    let newOptions = props.options;
+    if (props.multiple && props.hideSelected) {
+        newOptions = props.options.filter(option => !model.value?.includes(option.value)).filter((option) => option.label.toLowerCase().includes(search.value.toLowerCase()))
+    } else {
+        newOptions = props.options.filter((option) => option.label.toLowerCase().includes(search.value.toLowerCase()))
+    }
+    return newOptions
+})
 const closeOnSelect = computed(() => props.closeOnSelect || !props.multiple)
 
 const toggleDropdown = () => {
