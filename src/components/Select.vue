@@ -1,30 +1,9 @@
 <template>
     <div class="delta-select" ref="dropdownRef"
         :class="{ 'delta-select--disabled': disabled, 'delta-select--is-open': isOpen && !disabled }">
-        <button @click="toggleDropdown" class="delta-select__button">
-            <div class="delta-select__value" v-if="Array.isArray(selectedOption)">
-                <span class="delta-select__selected-item" v-for="option in selectedOption" :key="option.value">
-                    {{ option.label }}
-                    <button @click.stop="updateValue(option.value, option.disabled)">
-                        <CloseIcon :size="12" color="#111216" />
-                    </button>
-                </span>
-            </div>
-            <div class="delta-select__value" v-else>
-                {{ selectedOption }}
-            </div>
-            <div class="delta-select__icons">
-                <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue }">
-                    <button @click.stop="clearValue" v-if="!disabled && clearable && selectedOption.length"
-                        class="delta-select__clear">
-                        <CloseIcon :size="12" color="#111216" />
-                    </button>
-                </slot>
-                <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown }">
-                    <ExpandVerticalIcon :size="18" color="#111216" />
-                </slot>
-            </div>
-        </button>
+        <Selector v-model="search" v-bind="{ isOpen, options: selectedOptions, disabled, clearable }"
+            @toggle-dropdown="toggleDropdown" @remove-option="(value, disabled) => updateValue(value, disabled)"
+            @clear-value="clearValue" @focus="() => isOpen = true" />
         <slot name="list"
             v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
             v-if="isOpen && !disabled">
@@ -50,8 +29,7 @@ import { ref, computed, onMounted, onBeforeMount } from 'vue';
 import type { SelectProps, OptionType, ValueType } from '@/@types/main';
 
 import List from './list/List.vue';
-import CloseIcon from './icons/CloseIcon.vue';
-import ExpandVerticalIcon from './icons/ExpandVerticalIcon.vue';
+import Selector from './selector/Selector.vue';
 
 const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,
@@ -59,11 +37,20 @@ const props = withDefaults(defineProps<SelectProps>(), {
     clearable: true,
 })
 const model = defineModel<ValueType>()
+const search = ref('')
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
-const selectedOption = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || '')
-const optionsList = computed(() => props.multiple && props.hideSelected ? props.options.filter(option => !model.value?.includes(option.value)) : props.options)
+const selectedOptions = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || '')
+const optionsList = computed(() => {
+    let newOptions = props.options;
+    if (props.multiple && props.hideSelected) {
+        newOptions = props.options.filter(option => !model.value?.includes(option.value)).filter((option) => option.label.toLowerCase().includes(search.value.toLowerCase()))
+    } else {
+        newOptions = props.options.filter((option) => option.label.toLowerCase().includes(search.value.toLowerCase()))
+    }
+    return newOptions
+})
 const closeOnSelect = computed(() => props.closeOnSelect || !props.multiple)
 
 const toggleDropdown = () => {

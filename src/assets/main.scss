@@ -48,11 +48,33 @@ main {
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
+        position: relative;
+
+        .delta-select__button-bg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            z-index: 0;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
     }
 
     .delta-select__value {
         display: flex;
+        align-items: center;
         gap: 5px;
+        width: 100%;
+        z-index: 1;
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+            outline: none;
+        }
 
         .delta-select__selected-item {
             display: flex;
@@ -86,6 +108,7 @@ main {
         align-items: center;
         justify-content: center;
         gap: 5px;
+        z-index: 1;
 
         button {
             background: transparent;
