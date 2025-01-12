@@ -6,6 +6,13 @@ export type SelectProps = {
   closeOnSelect?: boolean
 } & Omit<ListProps, 'model'>
 
+export type SelectorProps = {
+  isOpen: boolean
+  options: string | OptionType[]
+  disabled?: boolean
+  clearable?: boolean
+}
+
 export type ValueType = string | OptionType['value'][]
 
 export type ListProps = {
