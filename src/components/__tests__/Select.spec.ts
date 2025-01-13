@@ -41,7 +41,7 @@ describe('Select', () => {
       },
     })
     expect(wrapper.find('.delta-select__list').exists()).toBe(false)
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     expect(wrapper.find('.delta-select__list').exists()).toBe(true)
   })
 
@@ -56,7 +56,7 @@ describe('Select', () => {
         disabled: true,
       },
     })
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     expect(wrapper.find('.delta-select__list').exists()).toBe(false)
   })
 
@@ -70,7 +70,7 @@ describe('Select', () => {
         modelValue: '1',
       },
     })
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     await wrapper.findAll('.delta-select__item')[1].trigger('click')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['2'])
   })
@@ -87,7 +87,7 @@ describe('Select', () => {
         multiple: true,
       },
     })
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     await wrapper.findAll('.delta-select__item')[0].trigger('click')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([['1', '2', '3']])
   })
@@ -105,7 +105,7 @@ describe('Select', () => {
       },
     })
 
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     await wrapper.findAll('.delta-select__item')[2].trigger('click')
     const options = wrapper.findAll('.delta-select__item')
     expect(options.length).toBe(2)
@@ -126,7 +126,7 @@ describe('Select', () => {
       },
     })
 
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     await wrapper.findAll('.delta-select__item')[0].trigger('click')
     await wrapper.findAll('.delta-select__item')[1].trigger('click')
     await wrapper.findAll('.delta-select__item')[2].trigger('click')
@@ -149,7 +149,7 @@ describe('Select', () => {
       },
     })
 
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     await wrapper.find('.choose-all').trigger('click')
     const selectedOptions = wrapper.findAll('.delta-select__selected-item')
     expect(selectedOptions.length).toBe(3)
@@ -163,7 +163,7 @@ describe('Select', () => {
       },
     })
 
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     expect(wrapper.find('.delta-select').classes()).toContain('delta-select--is-open')
 
     await document.body.click()
@@ -194,10 +194,28 @@ describe('Select', () => {
       },
     })
 
-    await wrapper.find('.delta-select__button').trigger('click')
+    await wrapper.find('.delta-select__button-bg').trigger('click')
     expect(wrapper.find('.delta-select').classes()).toContain('delta-select--is-open')
 
     await wrapper.find('.delta-select__item').trigger('click')
     expect(wrapper.find('.delta-select').classes()).not.toContain('delta-select--is-open')
+  })
+
+  it('filter options when typing', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+          { value: '3', label: 'Option 3' },
+        ],
+        modelValue: '',
+        filterable: true,
+      },
+    })
+
+    await wrapper.find('.delta-select__button-bg').trigger('click')
+    await wrapper.find('.delta-select__value input').setValue('Option 1')
+    expect(wrapper.findAll('.delta-select__item').length).toBe(1)
   })
 })
