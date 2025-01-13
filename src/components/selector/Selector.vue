@@ -10,7 +10,9 @@
             </span>
         </div>
         <div class="delta-select__value" v-else>
-            <input type="text" v-model="model" placeholder="Select ..." @focus="$emit('focus')" />
+            <div class="delta-select__value-option" v-if="!isOpen || !model?.length">{{ options }}
+            </div>
+            <input type="text" v-model="model" :placeholder="!options ? 'Select ...' : ''" @focus="$emit('focus')" />
         </div>
         <div class="delta-select__icons">
             <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue: () => $emit('clearValue') }">
