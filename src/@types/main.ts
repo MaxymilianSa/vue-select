@@ -3,6 +3,7 @@ import type { VNode } from 'vue'
 export type SelectProps = {
   disabled?: boolean
   clearable?: boolean
+  filterable?: boolean
   closeOnSelect?: boolean
 } & Omit<ListProps, 'model'>
 
@@ -11,6 +12,7 @@ export type SelectorProps = {
   options: string | OptionType[]
   disabled?: boolean
   clearable?: boolean
+  filterable?: boolean
 }
 
 export type ValueType = string | OptionType['value'][]

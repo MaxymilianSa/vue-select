@@ -1,7 +1,7 @@
 <template>
     <div class="delta-select" ref="dropdownRef"
         :class="{ 'delta-select--disabled': disabled, 'delta-select--is-open': isOpen && !disabled }">
-        <Selector v-model="search" v-bind="{ isOpen, options: selectedOptions, disabled, clearable }"
+        <Selector v-model="search" v-bind="{ isOpen, options: selectedOptions, disabled, clearable, filterable }"
             @toggle-dropdown="toggleDropdown" @remove-option="(value, disabled) => updateValue(value, disabled)"
             @clear-value="clearValue" @focus="() => isOpen = true" />
         <slot name="list"
@@ -94,6 +94,7 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
 
     if (closeOnSelect.value) {
         isOpen.value = false
+        search.value = ''
     }
 }
 
