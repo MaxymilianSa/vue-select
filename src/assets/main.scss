@@ -69,6 +69,16 @@ main {
         width: 100%;
         z-index: 1;
 
+        .delta-select__value-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            font-weight: 400;
+            color: #333333;
+            position: absolute;
+        }
+
         input {
             width: 100%;
             box-sizing: border-box;
@@ -84,6 +94,7 @@ main {
             padding: 5px 0 5px 10px;
             border: 2px solid #e1e1e1;
             border-radius: 5px;
+            font-size: 14px;
             cursor: default;
 
             button {

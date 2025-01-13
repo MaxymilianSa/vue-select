@@ -91,6 +91,7 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
     }
 
     model.value = value
+    search.value = props.options.find(option => option.value === value)?.label || ''
 
     if (closeOnSelect.value) {
         isOpen.value = false
@@ -111,11 +112,15 @@ const addAllOptions = () => {
 
 const clearValue = () => {
     model.value = props.multiple ? [] : ''
+    search.value = ''
 }
 
 const handleClickOutside = (event: MouseEvent) => {
     if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
         isOpen.value = false;
+    }
+    if (model.value !== '' && !props.multiple) {
+        search.value = props.options.find(option => option.value === model.value)?.label || ''
     }
 }
 
