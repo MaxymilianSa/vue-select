@@ -42,7 +42,7 @@ const search = ref('')
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
-const selectedOptions = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || '')
+const selectedOptions = computed<string | OptionType[]>(() => props.multiple && Array.isArray(model.value) ? model.value?.map((value) => props.options.find((option) => option.value === value)).filter((option) => !!option) : props.options.find(option => option.value === model.value)?.label || '')
 const optionsList = computed(() => {
     let newOptions = props.options;
     if (props.multiple && props.hideSelected) {
