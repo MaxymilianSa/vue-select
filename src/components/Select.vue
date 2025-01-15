@@ -1,8 +1,9 @@
 <template>
     <div class="delta-select" ref="dropdownRef"
         :class="{ 'delta-select--disabled': disabled, 'delta-select--is-open': isOpen && !disabled }">
-        <Selector v-model="search" v-bind="{ isOpen, options: selectedOptions, disabled, clearable, filterable }"
-            @toggle-dropdown="toggleDropdown" @remove-option="(value, disabled) => updateValue(value, disabled)"
+        <Selector v-model="search"
+            v-bind="{ isOpen, options: selectedOptions, list: optionsList, disabled, clearable, filterable, multiple }"
+            @toggle-dropdown="toggleDropdown" @update-value="(value, disabled) => updateValue(value, disabled)"
             @clear-value="clearValue" @focus="() => isOpen = true" />
         <slot name="list"
             v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
@@ -41,7 +42,7 @@ const search = ref('')
 const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
-const selectedOptions = computed<string | OptionType[]>(() => props.multiple ? props.options.filter(option => model.value?.includes(option.value)) : props.options.find(option => option.value === model.value)?.label || '')
+const selectedOptions = computed<string | OptionType[]>(() => props.multiple && Array.isArray(model.value) ? model.value?.map((value) => props.options.find((option) => option.value === value)).filter((option) => !!option) : props.options.find(option => option.value === model.value)?.label || '')
 const optionsList = computed(() => {
     let newOptions = props.options;
     if (props.multiple && props.hideSelected) {
@@ -82,6 +83,7 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
         }
 
         model.value = values
+        search.value = ''
 
         if (closeOnSelect.value) {
             isOpen.value = false

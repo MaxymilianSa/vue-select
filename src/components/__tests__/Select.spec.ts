@@ -218,4 +218,49 @@ describe('Select', () => {
     await wrapper.find('.delta-select__value input').setValue('Option 1')
     expect(wrapper.findAll('.delta-select__item').length).toBe(1)
   })
+
+  it('adds value on enter key press', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+          { value: '3', label: 'Option 3' },
+        ],
+        modelValue: '',
+        filterable: true,
+      },
+    })
+
+    await wrapper.find('.delta-select__button').trigger('click')
+    const input = wrapper.find('.delta-select__value input')
+    await input.setValue('Option 3')
+    await input.trigger('keypress.enter')
+
+    // Assuming the new value is added to the options list
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['3'])
+  })
+
+  it('adds value on enter key press in multiple mode', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+          { value: '3', label: 'Option 3' },
+        ],
+        modelValue: '',
+        filterable: true,
+        multiple: true,
+      },
+    })
+
+    await wrapper.find('.delta-select__button').trigger('click')
+    const input = wrapper.find('.delta-select__value input')
+    await input.setValue('Option 3')
+    await input.trigger('keypress.enter')
+
+    // Assuming the new value is added to the options list
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([['3']])
+  })
 })

@@ -13,6 +13,8 @@ export type SelectorProps = {
   disabled?: boolean
   clearable?: boolean
   filterable?: boolean
+  multiple?: boolean
+  list: OptionType[]
 }
 
 export type ValueType = string | OptionType['value'][]
