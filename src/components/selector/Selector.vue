@@ -5,19 +5,19 @@
             @click="toggleDropdown">
             <span class="delta-select__selected-item" v-for="option in options" :key="option.value">
                 {{ option.label }}
-                <button @click.stop="$emit('removeOption', option.value, option.disabled)">
+                <button @click.stop="$emit('updateValue', option.value, option.disabled)">
                     <CloseIcon :size="12" color="#111216" />
                 </button>
             </span>
             <input v-if="filterable" ref="inputRef" type="text" v-model="model"
-                :placeholder="!options ? 'Select ...' : ''" />
+                :placeholder="!options ? 'Select ...' : ''" @keypress.enter="addValueOnEnter" />
         </div>
         <div class="delta-select__value" v-else>
             <div class="delta-select__value-option" v-if="!isOpen || !model?.length"
                 @click="() => !filterable && toggleDropdown">{{ options }}
             </div>
             <input v-if="filterable" type="text" v-model="model" :placeholder="!options ? 'Select ...' : ''"
-                @focus="$emit('focus')" />
+                @focus="$emit('focus')" @keypress.enter="addValueOnEnter" />
         </div>
         <div class="delta-select__icons">
             <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue: () => $emit('clearValue') }">
@@ -45,7 +45,7 @@ const props = defineProps<SelectorProps>();
 
 const model = defineModel<string>();
 const emit = defineEmits<{
-    (e: 'removeOption', value: string, disabled?: boolean): void;
+    (e: 'updateValue', value: string, disabled?: boolean): void;
     (e: 'toggleDropdown'): void;
     (e: 'clearValue'): void;
     (e: 'focus'): void;
@@ -60,5 +60,11 @@ const toggleDropdown = () => {
 
     emit('toggleDropdown');
 };
+
+const addValueOnEnter = () => {
+    if (props.list.length > 0) {
+        emit('updateValue', props.list[0].value, props.list[0].disabled);
+    }
+}
 
 </script>
