@@ -2,7 +2,7 @@
     <div class="delta-select" ref="dropdownRef"
         :class="{ 'delta-select--disabled': disabled, 'delta-select--is-open': isOpen && !disabled }">
         <Selector v-model="search"
-            v-bind="{ isOpen, options: selectedOptions, list: optionsList, disabled, clearable, filterable, multiple }"
+            v-bind="{ isOpen, options: selectedOptions, list: optionsList, disabled, clearable, filterable, multiple, hideMoreItems }"
             @toggle-dropdown="toggleDropdown" @update-value="(value, disabled) => updateValue(value, disabled)"
             @clear-value="clearValue" @focus="() => isOpen = true" />
         <slot name="list"
@@ -36,6 +36,7 @@ const props = withDefaults(defineProps<SelectProps>(), {
     allOption: true,
     hideSelected: false,
     clearable: true,
+    hideMoreItems: true,
 })
 const model = defineModel<ValueType>()
 const search = ref('')

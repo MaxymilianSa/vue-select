@@ -5,7 +5,8 @@ export type SelectProps = {
   clearable?: boolean
   filterable?: boolean
   closeOnSelect?: boolean
-} & Omit<ListProps, 'model'>
+} & Omit<ListProps, 'model'> &
+  Pick<SelectorProps, 'hideMoreItems'>
 
 export type SelectorProps = {
   isOpen: boolean
@@ -15,6 +16,7 @@ export type SelectorProps = {
   filterable?: boolean
   multiple?: boolean
   list: OptionType[]
+  hideMoreItems?: boolean
 }
 
 export type ValueType = string | OptionType['value'][]
