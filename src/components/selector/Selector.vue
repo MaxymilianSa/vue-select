@@ -13,7 +13,8 @@
                 +{{ hiddenOptionsCount }} more
             </span>
             <input v-if="filterable" ref="inputRef" type="text" v-model.trim="model"
-                :placeholder="!options ? 'Select ...' : ''" @keypress.enter="addValueOnEnter" />
+                :placeholder="!options ? 'Select ...' : ''" @keypress.enter="addValueOnEnter"
+                @keydown.backspace="removeValueOnBackspace" />
         </div>
         <div class="delta-select__value" v-else>
             <div class="delta-select__value-option" v-if="!isOpen || !model?.length"
@@ -79,8 +80,14 @@ const addValueOnEnter = () => {
     }
 }
 
-function updateVisibleOptions() {
-    if (!valueContainer.value || !Array.isArray(props.options)) return [];
+const removeValueOnBackspace = () => {
+    if (Array.isArray(props.options) && props.options.length > 0) {
+        emit('updateValue', props.options[props.options.length - 1].value, props.options[props.options.length - 1].disabled);
+    }
+}
+
+const updateVisibleOptions = () => {
+    if (!valueContainer.value || !Array.isArray(props.options) || !props.options.length) return [];
 
     const containerWidth = valueContainer.value.clientWidth;
     const containerStyle = getComputedStyle(valueContainer.value);
