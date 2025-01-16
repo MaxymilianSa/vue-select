@@ -63,7 +63,11 @@ const toggleDropdown = () => {
 
 const addValueOnEnter = () => {
     if (props.list.length > 0) {
-        emit('updateValue', props.list[0].value, props.list[0].disabled);
+        const optionsToSelect = props.list.filter((option) => !option.disabled && (Array.isArray(props.options) ? !props.options.find(({ value }) => value === option.value) : props.options !== option.value));
+
+        if (optionsToSelect.length > 0) {
+            emit('updateValue', optionsToSelect[0].value, optionsToSelect[0].disabled);
+        }
     }
 }
 
