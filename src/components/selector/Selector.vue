@@ -9,14 +9,14 @@
                     <CloseIcon :size="12" color="#111216" />
                 </button>
             </span>
-            <input v-if="filterable" ref="inputRef" type="text" v-model="model"
+            <input v-if="filterable" ref="inputRef" type="text" v-model.trim="model"
                 :placeholder="!options ? 'Select ...' : ''" @keypress.enter="addValueOnEnter" />
         </div>
         <div class="delta-select__value" v-else>
             <div class="delta-select__value-option" v-if="!isOpen || !model?.length"
                 @click="() => !filterable && toggleDropdown">{{ options }}
             </div>
-            <input v-if="filterable" type="text" v-model="model" :placeholder="!options ? 'Select ...' : ''"
+            <input v-if="filterable" type="text" v-model.trim="model" :placeholder="!options ? 'Select ...' : ''"
                 @focus="$emit('focus')" @keypress.enter="addValueOnEnter" />
         </div>
         <div class="delta-select__icons">
