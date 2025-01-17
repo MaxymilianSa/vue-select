@@ -19,6 +19,9 @@
                 <template #footer="props">
                     <slot name="footer" v-bind="{ ...props }"></slot>
                 </template>
+                <template #empty-info>
+                    <slot name="empty-info"></slot>
+                </template>
             </List>
         </slot>
     </div>
