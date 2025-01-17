@@ -152,7 +152,8 @@ main {
         }
     }
 
-    .delta-select__list {
+    .delta-select__list,
+    .delta-select__empty-info {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -167,6 +168,14 @@ main {
         gap: 5px;
         list-style: none;
         margin: 0;
+
+        &.delta-select__empty-info {
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.5);
+        }
 
         .delta-select__item {
             width: 100%;

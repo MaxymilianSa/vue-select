@@ -1,6 +1,6 @@
 <template>
     <slot>
-        <ul class="delta-select__list">
+        <ul class="delta-select__list" v-if="options.length">
             <slot name="header" v-bind="$props">
                 <CheckAll v-if="multiple && allOption && !max" @handle-click="$emit('addAllOptions')" />
             </slot>
@@ -12,6 +12,11 @@
             </li>
             <slot name="footer" v-bind="$props"></slot>
         </ul>
+        <slot name="empty-info" v-else>
+            <div class="delta-select__empty-info">
+                No options available
+            </div>
+        </slot>
     </slot>
 </template>
 
