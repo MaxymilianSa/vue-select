@@ -1,7 +1,7 @@
 <template>
     <slot>
         <ul class="delta-select__list" v-if="options.length">
-            <slot name="header" v-bind="$props">
+            <slot name="header" v-bind="$props" v-if="canCheckAll">
                 <CheckAll v-if="multiple && allOption && !max" @handle-click="$emit('addAllOptions')" />
             </slot>
             <li v-for="option in options" :key="option.value">
@@ -21,14 +21,17 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue';
 import type { ListProps } from '@/@types/main';
 
 import CheckAll from './CheckAll.vue';
 import Item from './Item.vue';
 
-defineProps<ListProps>();
+const props = defineProps<ListProps>();
 defineEmits<{
     (e: 'addOption', value: string, disabled?: boolean): void;
     (e: 'addAllOptions'): void;
 }>();
+
+const canCheckAll = computed(() => props.options.length > 0 && !props.options.every(option => option.disabled));
 </script>
