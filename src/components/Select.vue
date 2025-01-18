@@ -109,11 +109,13 @@ const addAllOptions = () => {
         return
     }
 
-    model.value = props.options.filter(({ disabled }) => !disabled).map(option => option.value)
+    model.value = optionsList.value.filter(({ disabled }) => !disabled).map(option => option.value)
 
     if (closeOnSelect.value) {
         isOpen.value = false
     }
+
+    search.value = ''
 }
 
 const clearValue = () => {
