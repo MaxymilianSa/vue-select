@@ -1,12 +1,14 @@
 <template>
     <div class="delta-select__button">
         <button class="delta-select__button-bg" @click="toggleDropdown"></button>
-        <Multiple v-if="Array.isArray(options)" v-bind="{ isOpen, options, filterable, hideMoreItems }" ref="inputRef"
-            v-model="model" @handle-click="toggleDropdown" @handle-enter-on-input="addValueOnEnter"
-            @handle-backspace-on-input="removeValueOnBackspace"
-            @update-value="(value, disabled) => $emit('updateValue', value, disabled)" />
-        <Single v-bind="{ isOpen, options, filterable }" ref="inputRef" v-model="model" @handle-click="toggleDropdown"
-            @handle-enter-on-input="addValueOnEnter" v-else />
+        <slot name="input" v-bind="{ isOpen, disabled, model, options }">
+            <Multiple v-if="Array.isArray(options)" v-bind="{ isOpen, options, filterable, hideMoreItems }"
+                ref="inputRef" v-model="model" @handle-click="toggleDropdown" @handle-enter-on-input="addValueOnEnter"
+                @handle-backspace-on-input="removeValueOnBackspace"
+                @update-value="(value, disabled) => $emit('updateValue', value, disabled)" />
+            <Single v-bind="{ isOpen, options, filterable }" ref="inputRef" v-model="model"
+                @handle-click="toggleDropdown" @handle-enter-on-input="addValueOnEnter" v-else />
+        </slot>
         <Icons v-bind="{ disabled, clearable, options }" @handle-click-clear="$emit('clearValue')"
             @handle-click-open="toggleDropdown">
             <template #clear-icon>

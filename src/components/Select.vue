@@ -1,10 +1,23 @@
 <template>
     <div class="delta-select" ref="dropdownRef"
         :class="{ 'delta-select--disabled': disabled, 'delta-select--is-open': isOpen && !disabled }">
-        <Selector v-model="search"
-            v-bind="{ isOpen, options: selectedOptions, list: optionsList, disabled, clearable, filterable, multiple, hideMoreItems }"
-            @toggle-dropdown="toggleDropdown" @update-value="(value, disabled) => updateValue(value, disabled)"
-            @clear-value="clearValue" @focus="() => isOpen = true" />
+        <slot name="button">
+            <Selector v-model="search"
+                v-bind="{ isOpen, options: selectedOptions, list: optionsList, disabled, clearable, filterable, multiple, hideMoreItems }"
+                @toggle-dropdown="toggleDropdown" @update-value="(value, disabled) => updateValue(value, disabled)"
+                @clear-value="clearValue" @focus="() => isOpen = true">
+                <template #input>
+                    <slot name="input" v-bind="{ isOpen, disabled, model, options, updateValue, toggleDropdown }">
+                    </slot>
+                </template>
+                <template #clear-icon>
+                    <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue }"></slot>
+                </template>
+                <template #toggle-icon>
+                    <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown }"></slot>
+                </template>
+            </Selector>
+        </slot>
         <slot name="list"
             v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
             v-if="isOpen && !disabled">
