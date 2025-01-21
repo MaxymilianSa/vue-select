@@ -1,8 +1,10 @@
 <template>
     <button class="delta-select__button-bg" @click="handleClick"></button>
     <div class="delta-select__value">
-        <div class="delta-select__value-option" v-if="!isOpen || !model?.length"
-            @click="() => !filterable && handleClick">{{ options }}
+        <div class="delta-select__value-option" :class="{ empty: !filterable && !options.length }"
+            v-if="!isOpen || !model?.length || !filterable" @click="() => !filterable ? handleClick() : null">{{
+                filterable || options.length ? options : 'Select ...'
+            }}
         </div>
         <input v-if="filterable" type="text" ref="inputRef" v-model.trim="model"
             :placeholder="!options ? 'Select ...' : ''" @keypress.enter="handleEnterOnInput" @click="handleClick" />
