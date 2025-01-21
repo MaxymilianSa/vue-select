@@ -1,5 +1,4 @@
 <template>
-    <button class="delta-select__button-bg" @click="handleClick"></button>
     <div class="delta-select__value">
         <div class="delta-select__value-option" :class="{ empty: !filterable && !options.length }"
             v-if="!isOpen || !model?.length || !filterable" @click="() => !filterable ? handleClick() : null">{{

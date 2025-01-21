@@ -18,17 +18,15 @@
         </div>
         <Single v-bind="{ isOpen, options, filterable }" ref="inputRef" v-model="model" @handle-click="toggleDropdown"
             @handle-enter-on-input="addValueOnEnter" v-else />
-        <div class="delta-select__icons">
-            <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue: () => $emit('clearValue') }">
-                <button @click.stop="() => $emit('clearValue')" v-if="!disabled && clearable && options.length"
-                    class="delta-select__clear">
-                    <CloseIcon :size="12" color="#111216" />
-                </button>
-            </slot>
-            <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown: () => toggleDropdown }">
-                <ExpandVerticalIcon :size="18" color="#111216" @click="toggleDropdown" />
-            </slot>
-        </div>
+        <Icons v-bind="{ disabled, clearable, options }" @handle-click-clear="$emit('clearValue')"
+            @handle-click-open="toggleDropdown">
+            <template #clear-icon>
+                <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue: () => $emit('clearValue') }"></slot>
+            </template>
+            <template #toggle-icon>
+                <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown: () => toggleDropdown }"></slot>
+            </template>
+        </Icons>
     </div>
 </template>
 
@@ -38,9 +36,9 @@ import { ref, computed } from 'vue';
 import type { SelectorProps, OptionType } from '@/@types/main';
 
 import CloseIcon from '@/components/icons/CloseIcon.vue';
-import ExpandVerticalIcon from '@/components/icons/ExpandVerticalIcon.vue';
 
 import Single from './components/Single.vue';
+import Icons from './components/Icons.vue';
 
 const props = defineProps<SelectorProps>();
 
