@@ -1,6 +1,6 @@
 <template>
     <main>
-        <v-select v-model="value" v-bind="{ options }" filterable multiple />
+        <v-select v-model="value" v-bind="{ options }" />
     </main>
 </template>
 

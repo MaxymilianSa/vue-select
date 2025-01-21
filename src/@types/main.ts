@@ -19,6 +19,8 @@ export type SelectorProps = {
   hideMoreItems?: boolean
 }
 
+export type SingleValueProps = Pick<SelectorProps, 'isOpen' | 'filterable' | 'options'>
+
 export type ValueType = string | OptionType['value'][]
 
 export type ListProps = {

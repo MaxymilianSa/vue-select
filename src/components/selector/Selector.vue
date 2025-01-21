@@ -16,13 +16,8 @@
                 :placeholder="!options ? 'Select ...' : ''" @keypress.enter="addValueOnEnter"
                 @keydown.backspace="removeValueOnBackspace" />
         </div>
-        <div class="delta-select__value" v-else>
-            <div class="delta-select__value-option" v-if="!isOpen || !model?.length"
-                @click="() => !filterable && toggleDropdown">{{ options }}
-            </div>
-            <input v-if="filterable" type="text" v-model.trim="model" :placeholder="!options ? 'Select ...' : ''"
-                @focus="$emit('focus')" @keypress.enter="addValueOnEnter" />
-        </div>
+        <Single v-bind="{ isOpen, options, filterable }" ref="inputRef" v-model="model" @handle-click="toggleDropdown"
+            @handle-enter-on-input="addValueOnEnter" v-else />
         <div class="delta-select__icons">
             <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue: () => $emit('clearValue') }">
                 <button @click.stop="() => $emit('clearValue')" v-if="!disabled && clearable && options.length"
@@ -45,6 +40,8 @@ import type { SelectorProps, OptionType } from '@/@types/main';
 import CloseIcon from '@/components/icons/CloseIcon.vue';
 import ExpandVerticalIcon from '@/components/icons/ExpandVerticalIcon.vue';
 
+import Single from './components/Single.vue';
+
 const props = defineProps<SelectorProps>();
 
 const model = defineModel<string>();
@@ -52,10 +49,10 @@ const emit = defineEmits<{
     (e: 'updateValue', value: string, disabled?: boolean): void;
     (e: 'toggleDropdown'): void;
     (e: 'clearValue'): void;
-    (e: 'focus'): void;
 }>();
 
-const inputRef = ref<HTMLInputElement | null>(null);
+
+const inputRef = ref<{ inputRef: HTMLInputElement | null } | null>(null);
 const valueContainer = ref<HTMLElement | null>(null);
 
 const optionsToShow = computed<OptionType[]>(() => props.isOpen ? (Array.isArray(props.options) ? props.options : []) : visibleOptions.value);
@@ -65,7 +62,11 @@ const hiddenOptionsCount = computed<number>(() => (Array.isArray(props.options) 
 const toggleDropdown = () => {
     if (props.disabled) return;
 
-    if (inputRef.value && props.multiple) inputRef.value.focus();
+    if (props.isOpen) {
+        inputRef.value?.inputRef?.blur();
+    } else {
+        inputRef.value?.inputRef?.focus();
+    }
 
     emit('toggleDropdown');
 };
