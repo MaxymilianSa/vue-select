@@ -40,7 +40,7 @@ const optionsToShow = computed<OptionType[]>(() => props.isOpen ? (Array.isArray
 const hiddenOptionsCount = computed<number>(() => (Array.isArray(props.options) ? props.options.length : 0) - visibleOptions.value.length);
 
 const updateVisibleOptions = () => {
-    if (!valueContainer.value || !Array.isArray(props.options) || !props.options.length) return [];
+    if (!valueContainer.value || !Array.isArray(props.options) || !props.options.length) return visibleOptions.value = [];
 
     const containerWidth = valueContainer.value.clientWidth;
     const containerStyle = getComputedStyle(valueContainer.value);
@@ -65,7 +65,9 @@ const updateVisibleOptions = () => {
         }
 
         totalWidth += spanWidth;
-        options.push(props.options[i]);
+        if (props.options[i]) {
+            options.push(props.options[i]);
+        }
     }
 
     return visibleOptions.value = options;
