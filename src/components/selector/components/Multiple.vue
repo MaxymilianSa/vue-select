@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
 
 import type { OptionType, MultipleValueProps } from '@/@types/main';
 
@@ -34,9 +34,9 @@ const model = defineModel<string>();
 
 const inputRef = ref<HTMLInputElement | null>(null);
 const valueContainer = ref<HTMLElement | null>(null);
+const visibleOptions = ref<OptionType[]>([]);
 
 const optionsToShow = computed<OptionType[]>(() => props.isOpen ? (Array.isArray(props.options) ? props.options : []) : visibleOptions.value);
-const visibleOptions = computed<OptionType[]>(() => props.hideMoreItems ? updateVisibleOptions() : (Array.isArray(props.options) ? props.options : []));
 const hiddenOptionsCount = computed<number>(() => (Array.isArray(props.options) ? props.options.length : 0) - visibleOptions.value.length);
 
 const updateVisibleOptions = () => {
@@ -47,22 +47,43 @@ const updateVisibleOptions = () => {
     const gap = parseFloat(containerStyle.gap) || 0;
     let totalWidth = 0;
 
-    const visibleOptions: OptionType[] = [];
+    const options: OptionType[] = [];
 
-    const spans = valueContainer.value.querySelectorAll('.delta-select__selected-item');
+    const spans: NodeListOf<HTMLElement> = valueContainer.value.querySelectorAll('.delta-select__selected-item');
+    const moreText: HTMLElement | null = valueContainer.value.querySelector('.delta-select__more');
 
     for (let i = 0; i < spans.length; i++) {
-        const span = spans[i] as HTMLElement;
+        const span = spans[i];
         const spanWidth = span.offsetWidth + gap;
+        let moreTextWidth = 0
+        if (moreText) {
+            moreTextWidth = moreText ? moreText.offsetWidth + gap : 0;
+        }
 
-        if (totalWidth + spanWidth > containerWidth) {
+        if (totalWidth + spanWidth + moreTextWidth > containerWidth && i > 0) {
             break;
         }
 
         totalWidth += spanWidth;
-        visibleOptions.push(props.options[i]);
+        options.push(props.options[i]);
     }
 
-    return visibleOptions;
+    return visibleOptions.value = options;
 }
+
+watch(() => props.options, async () => {
+    await nextTick()
+    updateVisibleOptions();
+})
+
+onMounted(async () => {
+    await nextTick()
+    updateVisibleOptions();
+
+    window.addEventListener('resize', updateVisibleOptions);
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', updateVisibleOptions);
+});
 </script>
