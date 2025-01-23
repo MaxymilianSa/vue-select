@@ -4,14 +4,14 @@
         <slot name="button">
             <Selector v-model="search"
                 v-bind="{ isOpen, options: selectedOptions, list: optionsList, disabled, clearable, filterable, multiple, hideMoreItems }"
-                @toggle-dropdown="toggleDropdown" @update-value="(value, disabled) => updateValue(value, disabled)"
-                @clear-value="clearValue" @focus="() => isOpen = true">
+                @toggle-dropdown="toggleDropdown" @add="(value, disabled) => add(value, disabled)"
+                @remove="(value, disabled) => remove(value, disabled)" @clear="clear" @focus="() => isOpen = true">
                 <template #input>
-                    <slot name="input" v-bind="{ isOpen, disabled, model, options, updateValue, toggleDropdown }">
+                    <slot name="input" v-bind="{ isOpen, disabled, model, options, add, remove, toggleDropdown }">
                     </slot>
                 </template>
                 <template #clear-icon>
-                    <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue }"></slot>
+                    <slot name="clear-icon" v-bind="{ isOpen, disabled, clear }"></slot>
                 </template>
                 <template #toggle-icon>
                     <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown }"></slot>
@@ -19,15 +19,15 @@
             </Selector>
         </slot>
         <slot name="list"
-            v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, updateValue, addAllOptions }"
+            v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model, add, remove, addAll }"
             v-if="isOpen && !disabled">
-            <List v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model }"
-                @add-all-options="addAllOptions" @add-option="updateValue">
+            <List v-bind="{ multiple, max, allOption, hideSelected, options: optionsList, model }" @add-all="addAll"
+                @add="add" @remove="remove">
                 <template #header="props">
-                    <slot name="header" v-bind="{ ...props, addAllOptions }"></slot>
+                    <slot name="header" v-bind="{ ...props, addAll }"></slot>
                 </template>
                 <template #option="props">
-                    <slot name="option" v-bind="{ ...props, updateValue }"></slot>
+                    <slot name="option" v-bind="{ ...props, add, remove }"></slot>
                 </template>
                 <template #footer="props">
                     <slot name="footer" v-bind="{ ...props }"></slot>
@@ -80,7 +80,7 @@ const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
 }
 
-const updateValue = (value: OptionType['value'], disabled: OptionType['disabled']) => {
+const add = (value: OptionType['value'], disabled: OptionType['disabled']) => {
     if (disabled) {
         return
     }
@@ -93,11 +93,7 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
             return
         }
 
-        if (index > -1) {
-            values.splice(index, 1)
-        } else {
-            values.push(value)
-        }
+        values.push(value)
 
         model.value = values
         search.value = ''
@@ -117,12 +113,14 @@ const updateValue = (value: OptionType['value'], disabled: OptionType['disabled'
     }
 }
 
-const addAllOptions = () => {
+const addAll = () => {
     if (!props.multiple || !props.allOption || props.max) {
         return
     }
 
-    model.value = optionsList.value.filter(({ disabled }) => !disabled).map(option => option.value)
+    const values = model.value ? [...model.value] : []
+
+    model.value = [...values, ...optionsList.value.filter(({ disabled, value }) => !disabled && !values.includes(value)).map(option => option.value)]
 
     if (closeOnSelect.value) {
         isOpen.value = false
@@ -131,7 +129,24 @@ const addAllOptions = () => {
     search.value = ''
 }
 
-const clearValue = () => {
+const remove = (value: OptionType['value'], disabled: OptionType['disabled']) => {
+    if (props.disabled || disabled) {
+        return
+    }
+
+    if (props.multiple) {
+        const values = model.value ? [...model.value] : []
+        const index = values.indexOf(value)
+
+        if (index > -1) {
+            values.splice(index, 1)
+        }
+
+        model.value = values
+    }
+}
+
+const clear = () => {
     model.value = props.multiple ? [] : ''
     search.value = ''
 }

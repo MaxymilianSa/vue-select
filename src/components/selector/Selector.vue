@@ -5,14 +5,14 @@
             <Multiple v-if="Array.isArray(options)" v-bind="{ isOpen, options, filterable, hideMoreItems }"
                 ref="inputRef" v-model="model" @handle-click="toggleDropdown" @handle-enter-on-input="addValueOnEnter"
                 @handle-backspace-on-input="removeValueOnBackspace"
-                @update-value="(value, disabled) => $emit('updateValue', value, disabled)" />
+                @remove="(value, disabled) => $emit('remove', value, disabled)" />
             <Single v-bind="{ isOpen, options, filterable }" ref="inputRef" v-model="model"
                 @handle-click="toggleDropdown" @handle-enter-on-input="addValueOnEnter" v-else />
         </slot>
-        <Icons v-bind="{ disabled, clearable, options }" @handle-click-clear="$emit('clearValue')"
+        <Icons v-bind="{ disabled, clearable, options }" @handle-click-clear="$emit('clear')"
             @handle-click-open="toggleDropdown">
             <template #clear-icon>
-                <slot name="clear-icon" v-bind="{ isOpen, disabled, clearValue: () => $emit('clearValue') }"></slot>
+                <slot name="clear-icon" v-bind="{ isOpen, disabled, clear: () => $emit('clear') }"></slot>
             </template>
             <template #toggle-icon>
                 <slot name="toggle-icon" v-bind="{ isOpen, disabled, toggleDropdown: () => toggleDropdown }"></slot>
@@ -34,9 +34,10 @@ const props = defineProps<SelectorProps>();
 
 const model = defineModel<string>();
 const emit = defineEmits<{
-    (e: 'updateValue', value: string, disabled?: boolean): void;
+    (e: 'add', value: string, disabled?: boolean): void;
+    (e: 'remove', value: string, disabled?: boolean): void;
     (e: 'toggleDropdown'): void;
-    (e: 'clearValue'): void;
+    (e: 'clear'): void;
 }>();
 
 
@@ -59,14 +60,14 @@ const addValueOnEnter = () => {
         const optionsToSelect = props.list.filter((option) => !option.disabled && (Array.isArray(props.options) ? !props.options.find(({ value }) => value === option.value) : props.options !== option.value));
 
         if (optionsToSelect.length > 0) {
-            emit('updateValue', optionsToSelect[0].value, optionsToSelect[0].disabled);
+            emit('add', optionsToSelect[0].value, optionsToSelect[0].disabled);
         }
     }
 }
 
 const removeValueOnBackspace = () => {
-    if (Array.isArray(props.options) && props.options.length > 0) {
-        emit('updateValue', props.options[props.options.length - 1].value, props.options[props.options.length - 1].disabled);
+    if (Array.isArray(props.options) && props.options.length > 0 && model.value === '') {
+        emit('remove', props.options[props.options.length - 1].value, props.options[props.options.length - 1].disabled);
     }
 }
 
