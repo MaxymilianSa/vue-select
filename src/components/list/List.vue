@@ -2,12 +2,13 @@
     <slot>
         <ul class="delta-select__list" v-if="options.length">
             <slot name="header" v-bind="$props" v-if="canCheckAll">
-                <CheckAll v-if="multiple && allOption && !max" @handle-click="$emit('addAllOptions')" />
+                <CheckAll v-if="multiple && allOption && !max" @handle-click="$emit('addAll')" />
             </slot>
             <li v-for="option in options" :key="option.value">
-                <slot name="option" v-bind="{ ...$props, ...option }">
-                    <Item v-bind="{ ...$props, ...option }"
-                        @handle-click="$emit('addOption', option.value, option.disabled)" />
+                <slot name="option"
+                    v-bind="{ ...$props, ...option, add: () => $emit('add', option.value, option.disabled), remove: () => $emit('remove', option.value, option.disabled) }">
+                    <Item v-bind="{ ...$props, ...option }" @add="$emit('add', option.value, option.disabled)"
+                        @remove="$emit('remove', option.value, option.disabled)" />
                 </slot>
             </li>
             <slot name="footer" v-bind="$props"></slot>
@@ -29,8 +30,9 @@ import Item from './Item.vue';
 
 const props = defineProps<ListProps>();
 defineEmits<{
-    (e: 'addOption', value: string, disabled?: boolean): void;
-    (e: 'addAllOptions'): void;
+    (e: 'add', value: string, disabled?: boolean): void;
+    (e: 'remove', value: string, disabled?: boolean): void;
+    (e: 'addAll'): void;
 }>();
 
 const canCheckAll = computed(() => props.options.length > 0 && !props.options.every(option => option.disabled));

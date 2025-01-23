@@ -3,7 +3,7 @@
         @click="$emit('handleClick')">
         <span class="delta-select__selected-item" v-for="option in optionsToShow" :key="option.value">
             {{ option.label }}
-            <button @click.stop="$emit('updateValue', option.value, option.disabled)">
+            <button @click.stop="$emit('remove', option.value, option.disabled)">
                 <CloseIcon :size="12" color="#111216" />
             </button>
         </span>
@@ -11,8 +11,8 @@
             +{{ hiddenOptionsCount }} more
         </span>
         <input v-if="filterable" ref="inputRef" type="text" v-model.trim="model"
-            :placeholder="!options ? 'Select ...' : ''" @keypress.enter="$emit('handleEnterOnInput')"
-            @keydown.backspace="$emit('handleBackspaceOnInput')" />
+            @click.stop="() => isOpen ? null : $emit('handleClick')" :placeholder="!options ? 'Select ...' : ''"
+            @keypress.enter="$emit('handleEnterOnInput')" @keydown.backspace="$emit('handleBackspaceOnInput')" />
     </div>
 </template>
 
@@ -25,7 +25,7 @@ import CloseIcon from '@/components/icons/CloseIcon.vue';
 
 const props = defineProps<MultipleValueProps>();
 defineEmits<{
-    (e: 'updateValue', value: string, disabled?: boolean): void;
+    (e: 'remove', value: string, disabled?: boolean): void;
     (e: 'handleClick'): void;
     (e: 'handleEnterOnInput'): void;
     (e: 'handleBackspaceOnInput'): void;

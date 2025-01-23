@@ -1,5 +1,5 @@
 <template>
-    <button @click="$emit('handleClick')" class="delta-select__item"
+    <button @click="() => isChecked ? $emit('remove') : $emit('add')" class="delta-select__item"
         :class="{ active: isChecked, disabled: isDisabled, className }">
         <span v-if="multiple && !hideSelected">
             <CheckedIcon v-if="isChecked" color="#111216" />
@@ -30,7 +30,8 @@ import UncheckedIcon from '../icons/UncheckedIcon.vue';
 
 const { value, model, disabled, multiple, max } = defineProps<OptionProps>();
 defineEmits<{
-    (e: 'handleClick'): void;
+    (e: 'add'): void;
+    (e: 'remove'): void;
 }>();
 
 const isChecked = computed(() => value === model || (model as OptionType['value'][]).includes(value))
